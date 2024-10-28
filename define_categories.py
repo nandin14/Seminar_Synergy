@@ -21,21 +21,33 @@ seminar_data['Text'] = seminar_data['Text'].fillna('')  # Handle missing values
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf_vectorizer.fit_transform(seminar_data['Text'])
 
-# Apply K-Means Clustering with 25 clusters
-num_clusters = 60
+# Apply K-Means Clustering with the desired number of clusters
+num_clusters = 20
 kmeans = KMeans(n_clusters=num_clusters, random_state=42)
 kmeans.fit(tfidf_matrix)
 
 # Assign each seminar to a cluster
 seminar_data['Cluster'] = kmeans.labels_
 
-# Extract top terms in each cluster for dynamic category creation
+# Extract top terms in each cluster for dynamic category creation, ensuring uniqueness
 order_centroids = kmeans.cluster_centers_.argsort()[:, ::-1]
 terms = tfidf_vectorizer.get_feature_names_out()
 
+# Track terms that have already been used to ensure uniqueness
+used_terms = set()
 top_terms_per_cluster = []
+
 for i in range(num_clusters):
-    top_terms = [terms[ind] for ind in order_centroids[i, :10]]  # Top 10 terms per cluster
+    top_terms = []
+    for ind in order_centroids[i, :]:
+        term = terms[ind]
+        # Only add the term if it hasn't been used by another cluster
+        if term not in used_terms:
+            top_terms.append(term)
+            used_terms.add(term)
+        # Break once we've collected enough unique terms
+        if len(top_terms) >= 30:
+            break
     top_terms_per_cluster.append(top_terms)
 
 # Suggest unique category names based on top terms in each cluster
@@ -44,11 +56,11 @@ for i, terms in enumerate(top_terms_per_cluster):
     print(f"Cluster {i+1} Top Terms: {terms}")
 
     # Naming categories based on unique top terms
-    if 'machine' in terms or 'learning' in terms:
+    if 'machine' in terms or 'learning' in terms or 'data' in terms or 'science' in terms:
         category = "Data Science and Machine Learning"
     elif 'network' in terms or 'graph' in terms:
         category = "Network and Graph Theory"
-    elif 'ai' in terms or 'models' in terms or 'artificial' in terms:
+    elif 'ai' in terms or 'models' in terms or 'artificial' in terms or 'intelligence' in terms:
         category = "Artificial Intelligence"
     elif 'retrieval' in terms or 'information' in terms:
         category = "Information Retrieval"
@@ -91,7 +103,7 @@ for i, terms in enumerate(top_terms_per_cluster):
     if category not in categories:
         categories.append(category)
 
-# Output the 25 unique categories
-print("Top 25 Unique Seminar Categories:")
+# Output the unique categories
+print("Unique Seminar Categories:")
 for i, category in enumerate(categories):
     print(f"Category {i+1}: {category}")
