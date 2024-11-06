@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Call the Firestore connection test after initialization
+  await testFirestoreConnection();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthProvider(),
@@ -18,6 +24,29 @@ void main() async {
     ),
   );
 }
+
+Future<void> testFirestoreConnection() async {
+  if (kDebugMode) {
+    print("Starting Firestore connection test...");
+  }
+  try {
+    await FirebaseFirestore.instance.collection('test').doc('connection').set({
+      'connected': true,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    if (kDebugMode) {
+      print("Connection to Firestore successful!");
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error connecting to Firestore: $e");
+    }
+  }
+  if (kDebugMode) {
+    print("Firestore connection test complete.");
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
