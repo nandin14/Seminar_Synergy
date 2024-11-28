@@ -11,7 +11,7 @@ CORS(app)  # Enable CORS for all routes
 @app.route('/get_categories', methods=['GET'])
 def get_categories():
     # Load the data from the CSV file
-    seminar_data = pd.read_csv("C:\\Users\\parma\\StudioProjects\\initial_app\\Cleaned_Final_Table.csv")
+    seminar_data = pd.read_csv("C:\\Users\\parma\\StudioProjects\\initial_app\\assets\\Cleaned_Final_Table.csv")
 
     # Combine 'Title of the Seminar' and 'Abstract' to form a text corpus
     seminar_data['Text'] = seminar_data['Title of the Seminar'] + ' ' + seminar_data['Abstract']

@@ -43,6 +43,9 @@ dependencies:
   cloud_firestore: ^5.4.4
   shared_preferences: ^2.0.15
   table_calendar: ^3.0.6
+  intl: ^0.18.0
+  excel: ^2.0.0
+  syncfusion_flutter_xlsio: ^20.3.59
 
 
 
@@ -72,6 +75,9 @@ flutter:
   assets:
      - assets/background.jpg
      - assets/logo.png
+     - assets/Cleaned_Final_Table.csv
+     - assets/Cleaned_Final_Table.xlsx
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
