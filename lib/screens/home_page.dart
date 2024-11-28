@@ -7,9 +7,10 @@ import 'package:initial_app/screens/login_page.dart';
 
 // Import other pages for navigation
 import 'package:initial_app/screens/interests_page.dart';
-import 'package:initial_app/screens/seminars_page.dart';
 import 'package:initial_app/screens/calendar_page.dart';
 import 'package:initial_app/screens/settings_page.dart';
+
+import '../providers/navigation_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,12 +20,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
 
   // List of pages for navigation
   final List<Widget> _pages = [
     InterestsPage(),
-    SeminarsPage(),
     CalendarPage(),
     SettingsPage(),
   ];
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final navigationProvider = Provider.of<NavigationProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -155,35 +156,18 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: _pages[_currentIndex],
+      body: _pages[navigationProvider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Ensures all items are visible
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Interests',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Seminars',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _currentIndex, // Current selected index
-        selectedItemColor: Colors.blue, // Customize selected item color
-        unselectedItemColor: Colors.grey,
+        currentIndex: navigationProvider.currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index; // Update the current index
-          });
+          navigationProvider.setCurrentIndex(index);
         },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Interests'),
+          // BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Seminars'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
       ),
     );
   }

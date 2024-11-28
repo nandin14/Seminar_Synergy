@@ -43,8 +43,10 @@ dependencies:
   cloud_firestore: ^5.4.4
   shared_preferences: ^2.0.15
   table_calendar: ^3.0.6
+  excel: ^2.0.6
+  image_picker: ^0.8.5+3
+  firebase_storage: 12.3.4
   intl: ^0.18.0
-  excel: ^2.0.0
   syncfusion_flutter_xlsio: ^20.3.59
 
 
@@ -75,6 +77,7 @@ flutter:
   assets:
      - assets/background.jpg
      - assets/logo.png
+     - assets/seminar_data_with_categories.xlsx
      - assets/Cleaned_Final_Table.csv
      - assets/Cleaned_Final_Table.xlsx
 

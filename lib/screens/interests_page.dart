@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:initial_app/screens/seminars_page.dart';
+
+import '../utils/data_loader.dart';
 
 class InterestsPage extends StatefulWidget {
   const InterestsPage({super.key});
@@ -84,12 +87,37 @@ class _InterestsPageState extends State<InterestsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Selected categories saved successfully!")),
     );
+
+    // Navigate to Seminars page
+    // Load seminar data from the Excel file
+    final seminarData = await loadSeminarData('assets/seminar_data_with_categories.xlsx');
+
+    // Filter seminars based on selected categories
+    final selectedCategoryList = selectedCategories.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    final filteredSeminars = seminarData
+        .where((seminar) => selectedCategoryList.contains(seminar['Category']))
+        .map((seminar) => seminar['Title'])
+        .whereType<String>() // Filters out any null values, ensuring a List<String>
+        .toList();
+
+
+    // Navigate to SeminarsPage with the filtered seminars
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SeminarsPage(seminarTitles: filteredSeminars),
+      ),
+    );
   }
 
   Future<void> fetchCategories() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.71.77.19:5000/get_categories'),
+        Uri.parse('http://192.168.2.19:5000/get_categories'),
       );
 
       if (response.statusCode == 200) {
@@ -114,7 +142,9 @@ class _InterestsPageState extends State<InterestsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: const Text("Choose Your Interests"),
+      ),
       body: categories.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Scrollbar(
@@ -142,7 +172,7 @@ class _InterestsPageState extends State<InterestsPage> {
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: saveSelectedCategories, // Call the function to save selected categories
-          child: Text("Save Selected Categories"),
+          child: Text("Show Seminars"),
         ),
       ),
     );
