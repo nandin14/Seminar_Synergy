@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,7 +115,7 @@ class _InterestsPageState extends State<InterestsPage> {
   Future<void> fetchCategories() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.2.19:5000/get_categories'),
+        Uri.parse('http://192.168.2.89:5000/get_categories'),
       );
 
       if (response.statusCode == 200) {
