@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:excel/excel.dart'; // For reading Excel files
@@ -48,7 +49,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         _seminarDetails = data;
-        print('data $data');
       });
     } catch (e) {
       print("Error reading Excel file: $e");
@@ -57,7 +57,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
   List<Map<String, String>> getSeminarsForDate(DateTime date) {
     final String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-    print('formattedDate: $formattedDate');
 
     return _seminarDetails.where((seminar) {
       final dateStr = seminar['Date'];
@@ -78,14 +77,26 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     final seminarsForSelectedDate = getSeminarsForDate(_selectedDay);
-    print("seminarsForSelectedDate $seminarsForSelectedDate");
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Seminar Calendar')),
+      appBar: AppBar(
+        title: Text(
+          'Seminar Calendar',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF222222), // Dark background for AppBar
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Calendar Widget
             TableCalendar(
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
@@ -103,82 +114,128 @@ class _CalendarPageState extends State<CalendarPage> {
               onFormatChanged: (format) {
                 setState(() {
                   _calendarFormat = format;
-                  print("Calendar format changed to: $_calendarFormat");
                 });
               },
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
               },
-              calendarStyle: const CalendarStyle(
+              calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
-                  color: Colors.blueAccent,
+                  color: Colors.blueAccent.shade200,
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(
                   color: Colors.deepPurple,
                   shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8)],
                 ),
+                weekendTextStyle: const TextStyle(color: Colors.redAccent),
+                outsideDaysVisible: false,
               ),
-              headerStyle: const HeaderStyle(
+              headerStyle: HeaderStyle(
                 formatButtonVisible: true,
-                formatButtonShowsNext: false,
+                formatButtonDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                formatButtonTextStyle: const TextStyle(color: Colors.white),
                 titleCentered: true,
+                titleTextStyle: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black87,
+                ),
               ),
             ),
             const SizedBox(height: 20),
+
+            // Seminars for Selected Date
             Expanded(
               child: seminarsForSelectedDate.isEmpty
-                  ? const Center(child: Text('No seminars for the selected date.'))
+                  ? Center(
+                child: Text(
+                  'No seminars for the selected date.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Poppins',
+                    color: Colors.black54,
+                  ),
+                ),
+              )
                   : Scrollbar(
                 thumbVisibility: true,
                 child: ListView.builder(
                   itemCount: seminarsForSelectedDate.length,
                   itemBuilder: (context, index) {
                     final seminar = seminarsForSelectedDate[index];
-                    return Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    return Container(
+                      decoration: BoxDecoration(
+                        // Gradient background similar to your requested style
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.shade400,
+                            Colors.purple.shade400,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
                       margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Title: ${seminar['Title of the Seminar']}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            seminar['Title of the Seminar'] ?? '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white, // White text for visibility
+                              fontFamily: 'Poppins',
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Presenter: ${seminar['Presenter']}',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.blueGrey),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Presenter: ${seminar['Presenter']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white, // White text for visibility
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Time: ${seminar['Time']}',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.blueGrey),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Time: ${seminar['Time']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white, // White text for visibility
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Location: ${seminar['Location']}',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.blueGrey),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Location: ${seminar['Location']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white, // White text for visibility
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Abstract: ${seminar['Abstract']}',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.blueGrey),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            seminar['Abstract'] ?? '',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white, // White text for visibility
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -191,3 +248,4 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
+

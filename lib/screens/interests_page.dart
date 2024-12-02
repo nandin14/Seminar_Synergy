@@ -16,10 +16,10 @@ class InterestsPage extends StatefulWidget {
 
 class _InterestsPageState extends State<InterestsPage> {
   List<String> categories = [];
-  Map<String, bool> selectedCategories = {}; // Track selected categories
+  Map<String, bool> selectedCategories = {};
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? user; // Logged-in user
+  User? user;
 
   @override
   void initState() {
@@ -28,7 +28,6 @@ class _InterestsPageState extends State<InterestsPage> {
     fetchCategories();
   }
 
-  // Fetch the currently logged-in user
   Future<void> getCurrentUser() async {
     user = _auth.currentUser;
     if (user != null) {
@@ -36,10 +35,8 @@ class _InterestsPageState extends State<InterestsPage> {
     }
   }
 
-  // Load selected categories from Firestore
   Future<void> loadSelectedCategories() async {
-    if (user == null) return; // Ensure user is logged in
-
+    if (user == null) return;
     final categoriesSnapshot = await _firestore
         .collection('users')
         .doc(user!.uid)
@@ -53,44 +50,35 @@ class _InterestsPageState extends State<InterestsPage> {
     }
   }
 
-  // Save selected categories to Firestore in a 'categories' sub-collection
   Future<void> saveSelectedCategories() async {
-    if (user == null) return; // Ensure user is logged in
-
+    if (user == null) return;
     final categoriesCollection = _firestore
         .collection('users')
         .doc(user!.uid)
         .collection('categories');
 
-    // Start a batch operation
     final batch = _firestore.batch();
-
-    // Delete all existing documents in the 'categories' sub-collection
     final existingCategoriesSnapshot = await categoriesCollection.get();
     for (var doc in existingCategoriesSnapshot.docs) {
       batch.delete(doc.reference);
     }
 
-    // Add new selections
     selectedCategories.forEach((category, isSelected) {
       if (isSelected) {
         batch.set(categoriesCollection.doc(category), {'selected': isSelected});
       }
     });
 
-    // Commit the batch operation to apply all changes at once
     await batch.commit();
-
-    // Show a confirmation message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Selected categories saved successfully!")),
+      SnackBar(
+        content: Text("Selected categories saved successfully!"),
+        backgroundColor: Colors.black87,
+      ),
     );
 
-    // Navigate to Seminars page
-    // Load seminar data from the Excel file
-    final seminarData = await loadSeminarData('assets/seminar_data_with_categories.xlsx');
-
-    // Filter seminars based on selected categories
+    final seminarData =
+    await loadSeminarData('assets/seminar_data_with_categories.xlsx');
     final selectedCategoryList = selectedCategories.entries
         .where((entry) => entry.value)
         .map((entry) => entry.key)
@@ -99,11 +87,9 @@ class _InterestsPageState extends State<InterestsPage> {
     final filteredSeminars = seminarData
         .where((seminar) => selectedCategoryList.contains(seminar['Category']))
         .map((seminar) => seminar['Title'])
-        .whereType<String>() // Filters out any null values, ensuring a List<String>
+        .whereType<String>()
         .toList();
 
-
-    // Navigate to SeminarsPage with the filtered seminars
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -115,21 +101,21 @@ class _InterestsPageState extends State<InterestsPage> {
   Future<void> fetchCategories() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.2.89:5000/get_categories'),
+        Uri.parse('http://10.71.77.19:5000/get_categories'),
       );
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
           categories = List<String>.from(data);
-          // Initialize selection map, keeping previous selections if any
           for (var category in categories) {
             selectedCategories.putIfAbsent(category, () => false);
           }
         });
       } else {
         setState(() {
-          categories = ["Error: Server responded with status ${response.statusCode}"];
+          categories = [
+            "Error: Server responded with status ${response.statusCode}"
+          ];
         });
       }
     } catch (e) {
@@ -140,41 +126,105 @@ class _InterestsPageState extends State<InterestsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Choose Your Interests"),
+        title: Text(
+          'Choose Your Interests',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w900,  // Make the font bolder
+            fontSize: 22,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF222222), // Dark black background for AppBar
+        centerTitle: true,
       ),
       body: categories.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+        child: CircularProgressIndicator(
+          color: Colors.deepPurple,
+          strokeWidth: 6,
+        ),
+      )
           : Scrollbar(
-        thumbVisibility: true, // Ensures scrollbar is always visible
-        radius: Radius.circular(8), // Rounds the scrollbar for better visibility
-        thickness: 10, // Adjust thickness of the scrollbar for visibility
+        thumbVisibility: true,
+        thickness: 10,
+        radius: Radius.circular(12),
         child: ListView.builder(
-          padding: EdgeInsets.only(bottom: 80), // Padding for the bottom button
+          padding: EdgeInsets.all(16),
           itemCount: categories.length,
           itemBuilder: (context, index) {
             String category = categories[index];
-            return CheckboxListTile(
-              title: Text(category),
-              value: selectedCategories[category],
-              onChanged: (bool? value) {
-                setState(() {
-                  selectedCategories[category] = value ?? false;
-                });
-              },
+            bool isSelected = selectedCategories[category] ?? false;
+
+            return Container(
+              margin: EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                gradient: isSelected
+                    ? LinearGradient(
+                  colors: [Colors.deepPurple, Colors.blueAccent],
+                )
+                    : LinearGradient(
+                  colors: [Colors.white, Colors.grey[300]!],
+                ),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.all(16),
+                title: Text(
+                  category,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black87,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                trailing: Switch(
+                  value: isSelected,
+                  onChanged: (bool value) {
+                    setState(() {
+                      selectedCategories[category] = value;
+                    });
+                  },
+                ),
+              ),
             );
           },
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: ElevatedButton(
-          onPressed: saveSelectedCategories, // Call the function to save selected categories
-          child: Text("Show Seminars"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF3A3A3C),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 14),
+            textStyle: TextStyle(
+              fontSize: 18,
+              fontFamily: 'Poppins',
+            ),
+          ),
+          onPressed: saveSelectedCategories,
+          child: Text(
+            "Show Seminars",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
-
