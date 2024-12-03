@@ -80,6 +80,9 @@ flutter:
      - assets/seminar_data_with_categories.xlsx
      - assets/Cleaned_Final_Table.csv
      - assets/Cleaned_Final_Table.xlsx
+     - assets/Updated_Cleaned_Final_Table.xlsx
+
+
 
   #   - images/a_dot_ham.jpeg
 

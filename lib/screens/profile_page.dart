@@ -137,9 +137,19 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile Page'),
+        title: const Text(
+          'Profile Page',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color(0xFF222222),
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
@@ -147,86 +157,112 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Profile Picture Section
-                Center(
-                  child: GestureDetector(
-                    onTap: _pickImage,
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: _image != null
-                          ? FileImage(_image!) // Display selected image
-                          : (_imageUrl != null ? NetworkImage(_imageUrl!) : null) as ImageProvider?,
-                      child: _image == null && _imageUrl == null
-                          ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
-                          : null,
-                    ),
-                  ),
+        child: ListView(
+          children: [
+            // Profile Picture Section
+            Center(
+              child: GestureDetector(
+                onTap: _pickImage,
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: _image != null
+                      ? FileImage(_image!) // Display selected image
+                      : (_imageUrl != null ? NetworkImage(_imageUrl!) : null) as ImageProvider?,
+                  child: _image == null && _imageUrl == null
+                      ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
+                      : null,
                 ),
-                const SizedBox(height: 20),
-                // Name Field
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your full name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                // Email Field
-                TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                // Enrollment ID Field
-                TextFormField(
-                  controller: enrollmentIdController,
-                  decoration: const InputDecoration(
-                    labelText: 'Enrollment ID',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your enrollment ID';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 30),
-                // Save Button
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _saveProfile,
-                    child: const Text('Save Profile'),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            const SizedBox(height: 20),
+            // Name Field
+            _buildTextInputField(
+              controller: nameController,
+              label: 'Full Name',
+              icon: Icons.person,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your full name';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            // Email Field
+            _buildTextInputField(
+              controller: emailController,
+              label: 'Email',
+              icon: Icons.email,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            // Enrollment ID Field
+            _buildTextInputField(
+              controller: enrollmentIdController,
+              label: 'Enrollment ID',
+              icon: Icons.school,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your enrollment ID';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 30),
+            // Save Button
+            ElevatedButton(
+              onPressed: _saveProfile,
+              child: const Text('Save Profile',style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 18,
+                color: Colors.white,
+              ),),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  // Custom Text Input Field with icons and styling
+  Widget _buildTextInputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    int maxLines = 1,
+    required String? Function(String?) validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.deepPurple),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.deepPurple, width: 2),
+        ),
+      ),
+      maxLines: maxLines,
+      validator: validator,
+      style: const TextStyle(fontSize: 16),
     );
   }
 }

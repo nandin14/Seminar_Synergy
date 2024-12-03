@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.menu, color: Colors.white),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -61,13 +61,15 @@ class _HomePageState extends State<HomePage> {
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.white, // White color for text
               ),
             ),
           ],
         ),
+        backgroundColor: const Color(0xFF222222), // Dark background for AppBar
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
               try {
                 await authProvider.signOut();
@@ -87,10 +89,9 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // Optional: Add a Drawer Header
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: const Color(0xFF222222), // Dark background for DrawerHeader
               ),
               child: Text(
                 'Seminar Synergy',
@@ -101,8 +102,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profile', style: GoogleFonts.poppins()),
+              leading: Icon(Icons.person, size: 28,),
+              title: Text('Profile', style: GoogleFonts.poppins(fontSize: 22)),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
@@ -112,8 +113,8 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout', style: GoogleFonts.poppins()),
+              leading: Icon(Icons.logout, size: 28),
+              title: Text('Logout', style: GoogleFonts.poppins(fontSize: 22)),
               onTap: () async {
                 Navigator.pop(context); // Close the drawer
                 try {
@@ -128,31 +129,6 @@ class _HomePageState extends State<HomePage> {
                 }
               },
             ),
-            ListTile(
-              leading: Icon(Icons.contact_mail),
-              title: Text('Contact Us', style: GoogleFonts.poppins()),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Show Contact Us dialog or navigate to a page
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Contact Us', style: GoogleFonts.poppins()),
-                      content: Text('Email: support@seminarsynergy.com', style: GoogleFonts.poppins()),
-                      actions: [
-                        TextButton(
-                          child: Text('Close', style: GoogleFonts.poppins()),
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
           ],
         ),
       ),
@@ -162,9 +138,11 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           navigationProvider.setCurrentIndex(index);
         },
+        backgroundColor: const Color(0xFF222222), // Dark background for BottomNavigationBar
+        selectedItemColor: Colors.deepPurpleAccent, // Active icon color
+        unselectedItemColor: Colors.white70, // Inactive icon color
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Interests'),
-          // BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Seminars'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
