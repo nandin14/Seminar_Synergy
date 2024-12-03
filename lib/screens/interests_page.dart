@@ -100,8 +100,6 @@ class _InterestsPageState extends State<InterestsPage> {
 
     final filteredSeminars = seminarData
         .where((seminar) => selectedCategoryList.contains(seminar['Category']))
-        .map((seminar) => seminar['Title'])
-        .whereType<String>() // Filters out any null values, ensuring a List<String>
         .toList();
 
 
@@ -109,7 +107,7 @@ class _InterestsPageState extends State<InterestsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SeminarsPage(seminarTitles: filteredSeminars),
+        builder: (context) => SeminarsPage(seminars: filteredSeminars),
       ),
     );
   }

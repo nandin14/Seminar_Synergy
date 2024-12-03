@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:initial_app/providers/navigation_provider.dart';
-import 'package:initial_app/screens/seminars_page.dart';
 import 'package:provider/provider.dart';
 import 'package:initial_app/providers/auth_provider.dart';
 import 'package:initial_app/screens/login_page.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SeminarsPage extends StatelessWidget {
-  final List<String> seminarTitles; // Accept seminar titles
+  final List<Map<String, dynamic>> seminars; // Accept seminar details as a list of maps
 
-  const SeminarsPage({super.key, required this.seminarTitles});
+  const SeminarsPage({super.key, required this.seminars});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class SeminarsPage extends StatelessWidget {
         backgroundColor: Colors.deepPurple, // Set a custom color for the AppBar
         elevation: 4.0, // Add some shadow
       ),
-      body: seminarTitles.isEmpty
+      body: seminars.isEmpty
           ? const Center(
         child: Text(
           "No seminars match your selected interests.",
@@ -26,8 +26,9 @@ class SeminarsPage extends StatelessWidget {
         thickness: 10, // Adjust scrollbar thickness
         child: ListView.builder(
           padding: const EdgeInsets.all(16), // Add padding to the list
-          itemCount: seminarTitles.length,
+          itemCount: seminars.length,
           itemBuilder: (context, index) {
+            final seminar = seminars[index];
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0), // Space between cards
               child: Card(
@@ -41,17 +42,20 @@ class SeminarsPage extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                   title: Text(
-                    seminarTitles[index],
+                    seminar['Title'] ?? "Seminar",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600, // Bold text for emphasis
                     ),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.bookmark_border),
-                    onPressed: () {
-                      // Add functionality for bookmarking later
-                    },
-                    color: Colors.deepPurple,
+
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Presenter: ${seminar['Presenter']}"),
+                      Text("Date: ${seminar['Date']}"),
+                      Text("Time: ${seminar['Time']}"),
+                      Text("Location: ${seminar['Location']}"),
+                    ],
                   ),
                   onTap: () {
                     // Handle tapping on the seminar item
@@ -59,9 +63,10 @@ class SeminarsPage extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(seminarTitles[index]),
-                          content: const Text(
-                            "More details about this seminar will be available soon.",
+                          title: Text(seminar['Title'] ?? "Seminar Details"),
+                          content: Text(
+                            seminar['Abstract'] ??
+                                "More details about this seminar will be available soon.",
                           ),
                           actions: [
                             TextButton(

@@ -24,8 +24,13 @@ Future<List<Map<String, String>>> loadSeminarData(String filePath) async {
 
     // Map the row data (adjust indices based on your file's column structure)
     seminarData.add({
-      'Title': row[0]?.value.toString() ?? '', // Seminar title in 1st column
-      'Category': row[8]?.value.toString() ?? '', // Category in 9th column
+      'Title': row[0]?.value.toString() ?? '', // Adjust index based on column order
+      'Presenter': row[1]?.value.toString() ?? '',
+      'Time': row[2]?.value.toString() ?? '',
+      'Date': row[3]?.value.toString() ?? '',
+      'Location': row[4]?.value.toString() ?? '',
+      'Abstract': row[5]?.value.toString() ?? '',
+      'Category': row[8]?.value.toString() ?? '',
     });
   }
 
