@@ -12,7 +12,7 @@ CORS(app)  # Enable CORS for all routes
 @app.route('/get_categories', methods=['GET'])
 def get_categories():
     # Load the data from the CSV file
-    seminar_data = pd.read_csv("C:\\Users\\parma\\StudioProjects\\initial_app\\assets\\Cleaned_Final_Table.csv")
+    seminar_data = pd.read_csv("C:\\Users\\rakes\\Downloads\\Cleaned_Final_Table.csv")
 
     # Combine 'Title of the Seminar' and 'Abstract' to form a text corpus
     seminar_data['Text'] = seminar_data['Title of the Seminar'] + ' ' + seminar_data['Abstract']
@@ -62,7 +62,7 @@ def get_categories():
             category = "Cultural and Other"
         elif 'retrieval' in terms or 'information' in terms:
             category = "Information Retrieval"
-        elif 'iot' in terms or 'cloud' in terms:
+        elif 'iot' in terms or 'cloud' in terms or 'sgx' in terms or 'intel' in terms:
             category = "Cloud Computing and IoT"
         elif 'python' in terms or 'programming' in terms:
             category = "Python and Programming Workshops"
@@ -76,18 +76,12 @@ def get_categories():
             category = "Deep Learning and Neural Networks"
         elif 'ethics' in terms or 'systems' in terms:
             category = "Ethics in AI and Systems"
-        elif 'transformers' in terms or 'language' in terms:
-            category = "Natural Language Processing"
         elif 'secure' in terms or 'privacy' in terms:
             category = "Security and Privacy in AI"
-        elif 'sgx' in terms or 'intel' in terms:
-            category = "Secure Computing"
         elif 'gnns' in terms or 'geometric' in terms:
             category = "Graph Neural Networks"
-        elif 'large' in terms or 'models' in terms or 'llms' in terms:
-            category = "Large Language Models"
-        elif 'resume' in terms or 'screening' in terms:
-            category = "AI in Recruitment and HR"
+        elif 'transformers' in terms or 'language' in terms or 'llms' in terms:
+            category = "Natural Language Processing"
         elif 'robotics' in terms or 'automation' in terms:
             category = "Robotics and Automation"
         elif 'financial' in terms or 'commerce' in terms:
@@ -144,7 +138,7 @@ def download_excel():
         # Assign category based on the terms in the cluster
 
         if any(term in top_terms for term in ['network', 'graph']):
-            category = "Network and Graph Theory"
+            category = "Neural Network and Graph Theory"
         elif any(term in top_terms for term in ['artificial', 'intelligence', 'models']):
             category = "Artificial Intelligence"
         elif any(term in top_terms for term in ['data', 'science']):
@@ -153,7 +147,7 @@ def download_excel():
             category = "Cultural and Other"
         elif any(term in top_terms for term in ['retrieval', 'information']):
             category = "Information Retrieval"
-        elif any(term in top_terms for term in ['iot', 'cloud']):
+        elif any(term in top_terms for term in ['iot', 'cloud', 'intel', 'sgx']):
             category = "Cloud Computing and IoT"
         elif any(term in top_terms for term in ['python', 'programming']):
             category = "Python and Programming Workshops"

@@ -21,9 +21,9 @@ class SeminarsPage extends StatelessWidget {
         backgroundColor: const Color(0xFF222222),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // This line handles navigating back
+            Navigator.pop(context); // Navigate back
           },
         ),
       ),
@@ -75,7 +75,7 @@ class SeminarsPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.event,
                       color: Colors.white,
                       size: 32,
@@ -122,25 +122,83 @@ class SeminarsPage extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              seminar['Title'] ?? "Seminar Details",
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold,
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.teal.shade400,
+                                    Colors.indigo.shade400,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      seminar['Title'] ?? "Seminar Details",
+                                      style: const TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      seminar['Abstract'] ??
+                                          "More details about this seminar will be available soon.",
+                                      style: const TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                      ),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white
+                                              .withOpacity(0.8),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        onPressed: () =>
+                                            Navigator.pop(context),
+                                        child: const Text(
+                                          "Close",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            content: Text(
-                              seminar['Abstract'] ??
-                                  "More details about this seminar will be available soon.",
-                              style: const TextStyle(fontFamily: 'Poppins'),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text("Close"),
-                              ),
-                            ],
                           );
                         },
                       );
