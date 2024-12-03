@@ -206,14 +206,8 @@ class _SignupPageState extends State<SignupPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 80),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0), // Adjust the radius as needed
-                    child: Image.asset(
-                      'assets/logo.png', // Ensure the logo image is in your assets folder and registered in pubspec.yaml
-                      height: 70,
-                    ),
-                  ),
+                  const SizedBox(height: 120),
+
                   const SizedBox(height: 10),
                   Text(
                     "Join Seminar Synergy!",

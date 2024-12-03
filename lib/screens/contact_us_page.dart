@@ -71,24 +71,15 @@ class _ContactUsPageState extends State<ContactUsPage> {
         child: ListView(
           children: [
             const Text(
-              'Contact Us',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
               'For any assistance or issues with the app, please reach out to our support team at:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             _buildContactSection(
-              'Email: support@seminarsynergy.com',
+              'Email: support.seminarsynergy.com',
             ),
             _buildContactSection(
-              'Phone: +1 (123) 456-7890',
+              'Phone: +1 (226) 961-9530 ',
             ),
             _buildContactSection(
               'Or use the in-app contact form for any inquiries.',
@@ -141,7 +132,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child: const Text('Submit'),
+                    child: const Text('Submit', style: TextStyle(fontSize: 16, color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
