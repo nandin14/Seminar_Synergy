@@ -99,7 +99,7 @@ class _InterestsPageState extends State<InterestsPage> {
   Future<void> fetchCategories() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.2.19:5000/get_categories'),
+        Uri.parse('http://10.172.0.89:5000/get_categories'),
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
