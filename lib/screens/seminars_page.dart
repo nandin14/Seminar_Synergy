@@ -10,7 +10,7 @@ class SeminarsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Filtered Seminars",
+          "Recommended Seminars",
           style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
